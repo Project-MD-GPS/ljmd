@@ -12,7 +12,7 @@ For the GitHub setup we created an ad-hoc organization. This was done to circumv
 
 + Mandana took care of Force optimization and implementation of Newton's 3rd law. Her report can be found at https://github.com/Project-MD-GPS/ljmd/blob/optim%2Bmorse/reports/report_opt.md, see also https://github.com/Project-MD-GPS/ljmd/blob/optim%2Bmorse/reports/report_morse.md for Morse potential implementation
 + Fernando took care of OpenMP implementation. His report can be found at https://github.com/Project-MD-GPS/ljmd/blob/openmp/report-openmp.md
-+ Massimo took care of MPI implementation. His report can be found at **XXX**
++ Massimo took care of MPI implementation. His report can be found at https://github.com/MGisonni/ljmd/blob/Final_commit/reports/Individual%20Task%20Report.md, its cell implementation at https://github.com/MGisonni/ljmd/blob/Final_commit/reports/Extra%20Tasks%20Report.md
 
 
 
