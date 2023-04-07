@@ -1,6 +1,6 @@
 # GPS organization report
 
-
+## Massimo Gisonni, Fernando Santana Pacheco, Mandana Safari 
 
 ## Setting up the project
 
