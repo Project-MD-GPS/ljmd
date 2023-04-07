@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 extern "C" { // since our lib is C code, but the test here is C++
 #include <mdlib.h>
+#include <mdlib-util.h>
 }
 
 TEST(KineticEnergy, ComputeKE) {

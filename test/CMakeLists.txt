@@ -7,9 +7,12 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(gtest)
 
-add_executable(unit_tests kinetic_energy.cpp first_velverlet.cpp utilities.cpp forces.cpp input_output.cpp)
+add_executable(unit_tests kinetic_energy.cpp first_velverlet.cpp utilities.cpp input_output.cpp)
+target_link_options(unit_tests PRIVATE -fopenmp)
+target_link_libraries(unit_tests PRIVATE mdlib-util mdlib-mpi gtest_main)
 
-target_link_libraries(unit_tests PRIVATE mdlib gtest_main)
+add_executable(serial_tests forces.cpp)
+target_link_libraries(serial_tests PRIVATE mdlib-util mdlib-serial gtest_main)
 
 # automatic discovery of unit tests
 include(GoogleTest)
@@ -22,4 +25,3 @@ add_test(NAME CheckCodeWithRef
         COMMAND bash -c "cd ..;make check")
 
 add_custom_target(run_check_ref COMMAND ${CMAKE_CTEST_COMMAND} --verbose -R CheckCodeWithRef)
-

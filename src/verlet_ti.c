@@ -1,4 +1,6 @@
+#include <mdlib-util.h>
 #include <mdlib.h>
+#include <omp.h>
 
 
 /* first part: propagate velocities by half and positions by full step */
@@ -6,6 +8,10 @@
 void velverlet_first_half(mdsys_t *sys)
 {
     int i;
+    // execute the loop in parallel
+#ifdef _OPENMP
+    #pragma omp parallel for
+#endif
     for (i=0; i<sys->natoms; ++i) {
         sys->vx[i] += 0.5*sys->dt / mvsq2e * sys->fx[i] / sys->mass;
         sys->vy[i] += 0.5*sys->dt / mvsq2e * sys->fy[i] / sys->mass;
@@ -21,6 +27,10 @@ void velverlet_first_half(mdsys_t *sys)
 static void velverlet_second_half(mdsys_t *sys)
 {
     int i;
+    // execute the loop in parallel
+#ifdef _OPENMP
+    #pragma omp parallel for
+#endif
     for (i=0; i<sys->natoms; ++i) {
         sys->vx[i] += 0.5*sys->dt / mvsq2e * sys->fx[i] / sys->mass;
         sys->vy[i] += 0.5*sys->dt / mvsq2e * sys->fy[i] / sys->mass;
@@ -29,14 +39,29 @@ static void velverlet_second_half(mdsys_t *sys)
 }
 
 
-/* velocity verlet */
+
+
+/* velocity verlet: no OpenMP version */
 void velverlet(mdsys_t *sys)
-{
-    /* first part: propagate velocities by half and positions by full step */
-    velverlet_first_half(sys);
-    /* compute forces and potential energy */
-    force(sys);
-    /* second part: propagate velocities by another half step */
-    velverlet_second_half(sys);
+{   
+    #ifdef MPIYES
+        /* first part: propagate velocities by half and positions by full step */
+        if (sys->mpirank == 0) {
+            velverlet_first_half(sys);
+        }
+        /* compute forces and potential energy */
+        force(sys);
+        /* second part: propagate velocities by another half step */
+        if (sys->mpirank == 0) {
+            velverlet_second_half(sys);
+        }
+    #else
+        /* first part: propagate velocities by half and positions by full step */
+        velverlet_first_half(sys);
+        /* compute forces and potential energy */
+        force(sys);
+        /* second part: propagate velocities by another half step */
+        velverlet_second_half(sys);
+    #endif
 }
 
